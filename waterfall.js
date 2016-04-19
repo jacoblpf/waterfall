@@ -36,7 +36,7 @@
 			// 	}
 			// });		
 			var data = [
-						{ 'src':"http://h.hiphotos.baidu.com/image/h%3D300/sign=2fb4e98192cad1c8cfbbfa274f3c67c4/83025aafa40f4bfbe41767fa044f78f0f636185c.jpg"},
+						{ 'src':"http://img.hb.aicdn.com/dcff4778c4ba89cc473dc0bcd54147ac8712c113daab0-wDH1oV_fw658"},
 						{ 'src':"http://e.hiphotos.baidu.com/image/h%3D300/sign=37898e6af036afc3110c39658318eb85/908fa0ec08fa513d1251af743a6d55fbb3fbd9a5.jpg"},
 						{ 'src':"http://c.hiphotos.baidu.com/image/h%3D300/sign=889f0485b9096b639e1958503c328733/3801213fb80e7becd63ec04b282eb9389a506bb0.jpg"},
 						{ 'src':"http://h.hiphotos.baidu.com/image/h%3D300/sign=1655a14ec15c10383b7ec8c28211931c/2cf5e0fe9925bc31a365a0cc59df8db1cb1370ae.jpg"},
