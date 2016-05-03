@@ -176,7 +176,7 @@
 				// 	alert("布局完毕");
 				// }
 			})).then(function(){
-					boxs.animate({'opacity' : '1'},1000,'swing');_this.isLoad = true;_this.docH();
+					boxs.animate({'opacity' : '1'},300,'swing');_this.isLoad = true;_this.docH();
 			});
 			// setTimeout(function(){boxs.animate({'opacity' : '1'},500,'swing');_this.isLoad = true;_this.docH();},500);
 			//boxs.animate({'opacity' : '1'},1000,'swing');_this.isLoad = true;_this.docH();
