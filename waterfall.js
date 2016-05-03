@@ -158,7 +158,7 @@
 			var ew = _this.$c.width();	//父容器宽度 
 			var sw = boxs.width();
 			var cols = Math.floor(ew/sw);
-			$.each(boxs, function(i, v){
+			$.when($.each(boxs, function(i, v){
 				if (i < cols){
 					colH.push($(v).height()+20);
 				}else {
@@ -175,9 +175,11 @@
 				// if (i == boxs.length-1){
 				// 	alert("布局完毕");
 				// }
+			})).then(function(){
+					boxs.animate({'opacity' : '1'},1000,'swing');_this.isLoad = true;_this.docH();
 			});
 			// setTimeout(function(){boxs.animate({'opacity' : '1'},500,'swing');_this.isLoad = true;_this.docH();},500);
-			boxs.animate({'opacity' : '1'},1000,'swing');_this.isLoad = true;_this.docH();
+			//boxs.animate({'opacity' : '1'},1000,'swing');_this.isLoad = true;_this.docH();
 			// alert("显示完成");
 			
 		},
