@@ -205,7 +205,7 @@
 		    var lastPinH = $aPin.last().get(0).offsetTop + Math.floor($aPin.last().height());//创建【触发添加块框函数waterfall()】的高度：最后一个块框的距离网页顶部+自身高的一半(实现未滚到底就开始加载)
 		    var scrollTop = $( window ).scrollTop()//注意解决兼容性
 		    var documentH = $( window ).height();//页面高度
-		    return (lastPinH < scrollTop + documentH ) ? true : false;//到达指定高度后 返回true，触发waterfall()函数
+		    return (lastPinH - 50 < scrollTop + documentH ) ? true : false;//到达指定高度后 返回true，触发waterfall()函数
 		},
 		init:function(){			
 			this.request(this.time);
