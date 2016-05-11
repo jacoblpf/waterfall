@@ -210,6 +210,7 @@
 		init:function(){			
 			this.request(this.time);
 			this.scroll();
+			this.docH();
 		}
 		
 	}
