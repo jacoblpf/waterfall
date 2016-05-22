@@ -126,7 +126,7 @@
 				if (v.src == ""){
 					v.src = _this.imgDefault;
 				}
-				var box = $("<div class='"+_this.s+"'></div>").css({'opacity':0,'float':'left'});				
+				var box = $("<a class='"+_this.s+"' href='"+v.src+"'></a>").css({'opacity':0,'float':'left'});				
 				var img = $("<img src='"+v.src+"'/>").appendTo(box);
 				_this.$c.append(box);
 				imgs.push(img);
