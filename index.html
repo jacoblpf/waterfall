@@ -1,38 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta content="width=device-width, initial-scale=1,maximum-scale=1,maximum-scale=1, user-scalable=no" name="viewport">
-	<meta charset='utf-8'>
-	<title>瀑布流无限加载</title>
-	<link rel="shortcut icon" type="image/x-icon" href="http://vi3.6rooms.com/live/2016/04/20/11/1002v1461121929906141411_b.jpg"/>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>瀑布流布局</title>
 	<style type="text/css">
-	*{
-		margin: 0;
-		padding: 0;
-		box-sizing : border-box;
-	}
-	.waterfall {
-		width: 1200px;
-		margin: 0 auto;
-	}
-	.box{
-		width: 280px;
-		margin: 10px;
-	}
-	.box img {
-		width: 100%;
-		height: auto;
-	}
+		*{
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		html {
+			    font-family: "Microsoft YaHei", 微软雅黑,\9ed1\4f53,\5b8b\4f53, "Microsoft JhengHei", 华文细黑, STHeiti, MingLiu;
+		}
+		.waterfall {
+			width: 100%;
+			position: relative;
+		}
+		.waterfall_box {
+			float: left;
+			width: 300px;
+			/*margin: 10px;*/
+			transition: top 0.5s;
+		}
+		.waterfall_box .img_box{
+			display: block;
+			width: 280px;
+			margin: 10px;
+			border: 1px solid #ddd;
+		}
+		.waterfall_box img{
+			width: 100%;
+			border: none;
+			/*height: auto;*/
+		}
+		.waterfall_title {
+			display: inline-block;
+			height: 30px;
+			line-height: 30px;
+			text-indent: 5px;
+			overflow: hidden;
+			word-break: keep-all;
+			color: #333;
+			font-size: 14px;
+			text-decoration:none;
+			font-weight: 400;
+		}
+		.waterfall_title:hover {
+			color: #4bc11a;
+		}
 	</style>
+	<script type="text/javascript" src="./jquery.min.js"></script>
+	<script type="text/javascript" src="./waterfall.js"></script>
 </head>
 <body>
 	<div class="waterfall">
 		
 	</div>
 </body>
-<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="./waterfall.js"></script>
-<script type="text/javascript">
-	$(".waterfall").waterfall("box");
-</script>
 </html>
+<script type="text/javascript">
+	$(function(){
+
+	console.log($(".waterfall").waterfall("./getdata", 300));
+	});
+</script>
