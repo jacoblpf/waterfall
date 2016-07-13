@@ -1,223 +1,146 @@
-(function ($, window, document, undefined) {
-	var $window = $(window);
-	var Wtaerfall = function(c, s){
-		this.$c = $(c); //瀑布流父容器
-		this.s = s; //子元素类名
-		this.imgDefault = "./Default.png"; //缺省图片
-		this.isImgLoad = true;	//图片是否加载完成
-		this.setTime;	//图片检查定时器
-		this.time = 1;	//请求次数
-		this.isLoad = true; //是否可以请求
-	}
+(function($, window, docuemnt, undefined){
 
-	Wtaerfall.prototype = {
+	var Water = function( parent, url, childWidth){
 
-		constructor:Wtaerfall,
+		if (url === undefined || typeof url !== 'string'){
+			throw new Error ( "url is undefined or not a sting" );
+		}
 
-		request:function(p){ 
-			var _this = this;
-			// $.ajax({
-			// 	url:'',
-			// 	type:'post',
-			// 	success:function(data){
-			// 		if (data.length == 0){
-			// 			alert("抱歉，没有图片了！")
-			// 			return false;
-			// 		}
-			// 		if (!_this.isLoad) {
-			// 			return false;
-			// 		}
-			// 		_this.isLoad = false;
-			// 		_this.time++;
-			// 		_this.creat(data);
-			// 	},
-			// 	error:function(){
+		var _parent 	= 	$(parent),
+			_page 		=	1,
+			_nowNode 	= 	[],
+			_childWidth = 	childWidth,
+			_requestable = true;
 
-			// 	}
-			// });		
-			var data = [
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/00/1002v1461084954136538551_b.jpg"},
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/00/1002v1461084952952566974_b.jpg"},
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/00/1002v1461084951971473636_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/00/1002v1461084950671513358_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/00/1002v1461084949836229511_b.jpg"},
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/00/1002v1461084948028713930_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/00/1002v1461084947495461237_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/00/1002v1461084946171490635_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/00/1002v1461084945223654292_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/00/1002v1461084944119328303_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/00/1002v1461084943148577578_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/00/1002v1461084942015473002_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/00/1002v1461084939566338326_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/00/1002v1461084938802490856_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/00/1002v1461084937804067873_b.jpg"},
-						{'src':"http://vi4.6rooms.com/live/2016/04/20/00/1002v1461084937333079090_b.jpg"},
-						{'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086272445344813_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086271898269600_b.jpg"},
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/01/1002v1461086271456931316_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086271093521082_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086270590585936_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/01/1002v1461086270087373076_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086269549682663_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086268684693475_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086268102313627_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086267518491910_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086267076584889_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/01/1002v1461086266675462898_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/01/1002v1461086266132014500_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086265449230395_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086264791695649_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086263865266059_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086263209616701_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086262697350423_b.jpg"},
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/01/1002v1461086239400158722_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086238990684634_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086238417082176_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/01/1002v1461086237968836797_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/01/1002v1461086237390478529_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086236111894784_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086235479887801_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086234828253227_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086234010834134_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/01/1002v1461086233214093384_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086232645710996_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086231964010406_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086231334347651_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086230921981204_b.jpg"},
-						{ 'src':"http://vi1.6rooms.com/live/2016/04/20/01/1002v1461086230466624999_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086229903960617_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086229130360369_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086228408856440_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086226941784556_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086226308455503_b.jpg"},
-						{ 'src':"http://vi0.6rooms.com/live/2016/04/20/01/1002v1461086225460776922_b.jpg"},
-						{ 'src':"http://vi5.6rooms.com/live/2016/04/20/01/1002v1461086224878567245_b.jpg"},
-						{ 'src':"http://vi2.6rooms.com/live/2016/04/20/01/1002v1461086223703571764_b.jpg"},
-						{ 'src':"http://vi3.6rooms.com/live/2016/04/20/01/1002v1461086223143911124_b.jpg"},
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/00/1002v1461084954136538551_b.jpg"},
-						{ 'src':"http://vi4.6rooms.com/live/2016/04/20/00/1002v1461084952952566974_b.jpg"}
-		
-					];
 
-					var data1 = data.slice((_this.time-1)*10, _this.time*10);
+		var data  = {'img':[
+		{ 'src':"/Uploads/Picture/2016-05-18/573c06664afb6.jpg", 'text':"2-3-B17套房全景图", 'url':"/home/article/detail/id/90.html", 'width':"300", 'height':"202" },{ 'src':"/Uploads/Picture/2016-05-18/573c068b49eb9.jpg", 'text':"2-3-B18样板间实景体验", 'url':"/home/article/detail/id/91.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-25/574502715b138.jpg", 'text':"2-3-B19样板间实景体验", 'url':"/home/article/detail/id/92.html", 'width':"300", 'height':"450" },{ 'src':"/Uploads/Picture/2016-05-18/573c07894a054.jpg", 'text':"2-3-C07样板间实景体验", 'url':"/home/article/detail/id/93.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-18/573c06ec45168.jpg", 'text':"2-3-B20样板间实景体验", 'url':"/home/article/detail/id/94.html", 'width':"300", 'height':"206" },{ 'src':"/Uploads/Picture/2016-05-25/574500c5cc6a6.jpg", 'text':"2-3-C09样板间实景体验", 'url':"/home/article/detail/id/96.html", 'width':"300", 'height':"450" },{ 'src':"/Uploads/Picture/2016-05-25/57451d43ca416.jpg", 'text':"2-3-C15样板间实景体验", 'url':"/home/article/detail/id/97.html", 'width':"300", 'height':"455" },{ 'src':"/Uploads/Picture/2016-05-18/573c08824b1da.jpg", 'text':"2-3-C16样板间实景体验", 'url':"/home/article/detail/id/98.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-18/573c089e4fa89.jpg", 'text':"2-3-C17样板间实景体验", 'url':"/home/article/detail/id/99.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-18/573c098a47f3c.jpg", 'text':"2-3-D09样板间实景体验", 'url':"/home/article/detail/id/100.html", 'width':"300", 'height':"198" },{ 'src':"/Uploads/Picture/2016-05-18/573c09aa4584a.jpg", 'text':"2-3-D10样板间实景体验", 'url':"/home/article/detail/id/101.html", 'width':"300", 'height':"199" },{ 'src':"/Uploads/Picture/2016-05-18/573c09d44608d.jpg", 'text':"2-3-D11样板间实景体验", 'url':"/home/article/detail/id/102.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-25/57451dd8c6e5b.jpg", 'text':"2-3-D12样板间实景体验", 'url':"/home/article/detail/id/103.html", 'width':"300", 'height':"450" },{ 'src':"/Uploads/Picture/2016-05-18/573c0a2b4a277.jpg", 'text':"2-3-D13样板间实景体验", 'url':"/home/article/detail/id/105.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-25/57451f6cc5897.jpg", 'text':"2-3-D15套件全景图", 'url':"/home/article/detail/id/106.html", 'width':"300", 'height':"450" },{ 'src':"/Uploads/Picture/2016-05-26/5746d34e08ae3.jpg", 'text':"2-3-D17样板间实景体验", 'url':"/home/article/detail/id/107.html", 'width':"300", 'height':"450" },{ 'src':"/Uploads/Picture/2016-05-27/5747f9b5812c9.jpg", 'text':"2-3-D19样板间实景体验", 'url':"/home/article/detail/id/108.html", 'width':"300", 'height':"450" },{ 'src':"/Uploads/Picture/2016-05-18/573c0ab148688.jpg", 'text':"2-3-D20样板间实景体验", 'url':"/home/article/detail/id/109.html", 'width':"300", 'height':"203" },{ 'src':"/Uploads/Picture/2016-05-18/573c0bb64d1f7.jpg", 'text':"2-3-F01样板间实景体验", 'url':"/home/article/detail/id/110.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-18/573c0be14d3d3.jpg", 'text':"2-3-F02样板间实景体验", 'url':"/home/article/detail/id/111.html", 'width':"300", 'height':"198" },{ 'src':"/Uploads/Picture/2016-05-18/573c0bf943b29.jpg", 'text':"2-3-F04样板间实景体验", 'url':"/home/article/detail/id/112.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-18/573c0c2948440.jpg", 'text':"2-3-F05样板间实景体验", 'url':"/home/article/detail/id/113.html", 'width':"300", 'height':"212" },{ 'src':"/Uploads/Picture/2016-05-18/573c055445f08.jpg", 'text':"2-3-B03样板间实景体验", 'url':"/home/article/detail/id/114.html", 'width':"300", 'height':"198" },{ 'src':"/Uploads/Picture/2016-05-18/573c057351197.jpg", 'text':"2-3-B04样板间实景体验", 'url':"/home/article/detail/id/115.html", 'width':"300", 'height':"213" },{ 'src':"/Uploads/Picture/2016-05-28/57490a8b09d97.jpg", 'text':"2-3-C01样板间实景体验", 'url':"/home/article/detail/id/116.html", 'width':"300", 'height':"451" },{ 'src':"/Uploads/Picture/2016-05-18/573c073151ff1.jpg", 'text':"2-3-C02样板间实景体验", 'url':"/home/article/detail/id/117.html", 'width':"300", 'height':"197" },{ 'src':"/Uploads/Picture/2016-05-18/573c075f4899d.jpg", 'text':"2-3-C03样板间实景体验", 'url':"/home/article/detail/id/118.html", 'width':"300", 'height':"199" },{ 'src':"/Uploads/Picture/2016-05-18/573c07eb47fcb.jpg", 'text':"2-3-C10样板间实景体验", 'url':"/home/article/detail/id/119.html", 'width':"300", 'height':"196" },{ 'src':"/Uploads/Picture/2016-05-18/573c081b4b196.jpg", 'text':"2-3-C11样板间实景体验", 'url':"/home/article/detail/id/120.html", 'width':"300", 'height':"196" },{ 'src':"/Uploads/Picture/2016-05-18/573c083c4a44f.jpg", 'text':"2-3-C12样板间实景体验", 'url':"/home/article/detail/id/121.html", 'width':"300", 'height':"199" },{ 'src':"/Uploads/Picture/2016-05-18/573c08b748a70.jpg", 'text':"2-3-D01样板间实景体验", 'url':"/home/article/detail/id/122.html", 'width':"300", 'height':"200" },{ 'src':"/Uploads/Picture/2016-05-25/5745016fdaa9d.jpg", 'text':"2-3-D02样板间实景体验", 'url':"/home/article/detail/id/123.html", 'width':"300", 'height':"451" },{ 'src':"/Uploads/Picture/2016-05-18/573c09154585f.jpg", 'text':"2-3-D04样板间实景体验", 'url':"/home/article/detail/id/124.html", 'width':"300", 'height':"196" },{ 'src':"/Uploads/Picture/2016-05-18/573c09374fbcd.jpg", 'text':"2-3-D06样板间实景体验", 'url':"/home/article/detail/id/125.html", 'width':"300", 'height':"199" },{ 'src':"/Uploads/Picture/2016-05-27/5747ebee8aac1.jpg", 'text':"2-4-A06样板间实景体验", 'url':"/home/article/detail/id/126.html", 'width':"300", 'height':"198" },{ 'src':"/Uploads/Picture/2016-05-27/5747f886850c1.jpg", 'text':"2-4-A08样板间实景体验", 'url':"/home/article/detail/id/127.html", 'width':"300", 'height':"451" },{ 'src':"/Uploads/Picture/2016-05-27/5747f0518dfd2.jpg", 'text':"2-4-B01样板间实景体验", 'url':"/home/article/detail/id/128.html", 'width':"300", 'height':"204" },{ 'src':"/Uploads/Picture/2016-05-27/5747f066853e2.jpg", 'text':"2-4-B02样板间实景体验", 'url':"/home/article/detail/id/129.html", 'width':"300", 'height':"199" },{ 'src':"/Uploads/Picture/2016-05-27/5747f09d9fccb.jpg", 'text':"2-4-B05样板间实景体验", 'url':"/home/article/detail/id/130.html", 'width':"300", 'height':"449" },{ 'src':"/Uploads/Picture/2016-06-24/576cc2730fa8c.jpg", 'text':"2-4-B06样板间实景体验", 'url':"/home/article/detail/id/131.html", 'width':"300", 'height':"199" },{ 'src':"/Uploads/Picture/2016-04-07/5705c6259a225.jpg", 'text':"2-4-B08样板间实景体验", 'url':"/home/article/detail/id/132.html", 'width':"300", 'height':"451" },{ 'src':"/Uploads/Picture/2016-05-27/5747f1bb883a9.jpg", 'text':"2-4-B09样板间实景体验", 'url':"/home/article/detail/id/133.html", 'width':"300", 'height':"196" },{ 'src':"/Uploads/Picture/2016-05-25/57451fd5c4cc1.jpg", 'text':"2-4-B10样板间实景体验", 'url':"/home/article/detail/id/134.html", 'width':"300", 'height':"205" },{ 'src':"/Uploads/Picture/2016-04-07/5705c65beff1d.jpg", 'text':"2-4-B11样板间实景体验", 'url':"/home/article/detail/id/135.html", 'width':"451", 'height':"300" },{ 'src':"/Uploads/Picture/2016-04-07/5705c5f5871d1.jpg", 'text':"2-4-B03样板间实景体验", 'url':"/home/article/detail/id/136.html", 'width':"451", 'height':"300" },{ 'src':"/Uploads/Picture/2016-05-27/5747f82e8838f.jpg", 'text':"2-4-B13样板间实景体验", 'url':"/home/article/detail/id/137.html", 'width':"300", 'height':"369" },{ 'src':"/Uploads/Picture/2016-05-25/57452056c44ac.jpg", 'text':"2-4-B14样板间实景体验", 'url':"/home/article/detail/id/138.html", 'width':"300", 'height':"199" },{ 'src':"/Uploads/Picture/2016-04-07/5705c676a6163.jpg", 'text':"2-4-B15样板间实景体验", 'url':"/home/article/detail/id/139.html", 'width':"300", 'height':"451" },{ 'src':"/Uploads/Picture/2016-05-27/5747f2768308d.jpg", 'text':"2-4-B17样板间实景体验", 'url':"/home/article/detail/id/140.html", 'width':"300", 'height':"195" },{ 'src':"/Uploads/Picture/2016-05-27/5747f28b85dd4.jpg", 'text':"2-4-B18样板间实景体验", 'url':"/home/article/detail/id/141.html", 'width':"300", 'height':"179" }]};
 
-					if (data1.length == 0){
-						// console.log("抱歉，没有图片了！")
-						// return false;
-						_this.time = 1;
-						data1 = data.slice((_this.time-1)*10, _this.time*10);
-					}
-					if (!_this.isLoad) {
-						return false;
-					}
-					_this.isLoad = false;
-					_this.time++;
-					_this.creat(data1);
-		
-		},
-		creat:function(data){
-			var _this = this;
-			var imgs = [];
-			_this.$c.css({'position':'relative'});
-			$.each(data, function(i, v){
-				if (v == null){
+		function getData (){
+
+			if (_requestable){
+					_requestable  = false;
+					// $.ajax({
+					// 	url : url,
+					// 	type : "post",
+					// 	success : function( data ){
+					// _page++;
+					// 		return data;
+					// 	},
+					// 	error : function( msg ){
+					// 		alert(msg);
+					// 	}
+					// })
+					
+					return data.img;
+				}else {
 					return false;
 				}
-				if (v.src == ""){
-					v.src = _this.imgDefault;
-				}
-				var box = $("<a class='"+_this.s+"' href='"+v.src+"'></a>").css({'opacity':0,'float':'left'});				
-				var img = $("<img src='"+v.src+"'/>").appendTo(box);
-				_this.$c.append(box);
-				imgs.push(img);
-			});
-			_this.checkImg(imgs);
-		},
-		checkImg:function(imgs){
-			var _this = this;
-			$.each(imgs, function(i, v){
-				
-				if (!$(v).get(0).complete){
-					_this.isImgLoad = false;
-				}
-				return false;
-			});
-			if (_this.isImgLoad){
-				_this.layout();
-			}else {
-				_this.isImgLoad = true;
-				setTime = setTimeout(function(){
-					_this.checkImg(imgs);
-				},500);
-			}
-		},
-		layout:function(){
-			var _this = this;
-			var boxs = _this.$c.find("."+_this.s);
-			var colH = [];
-			var ew = _this.$c.width();	//父容器宽度 
-			var sw = boxs.width();
-			var cols = Math.floor(ew/sw);
-			$.when($.each(boxs, function(i, v){
-				if (i < cols){
-					colH.push($(v).height()+20);
-				}else {
-					var minColH = Math.min.apply(null, colH);
-					var minColI = $.inArray(minColH, colH);
-					$(v).css({
-						'position' : 'absolute',
-						'top' : minColH,
-						'left' : boxs.eq(minColI).position().left
-					});
-					colH[minColI] += (20+$(v).height());
-					_this.$c.height(Math.max.apply(null, colH));
-				}
-				// if (i == boxs.length-1){
-				// 	alert("布局完毕");
-				// }
-			})).then(function(){
-					boxs.animate({'opacity' : '1'},300,'swing');_this.isLoad = true;_this.docH();
-			});
-			// setTimeout(function(){boxs.animate({'opacity' : '1'},500,'swing');_this.isLoad = true;_this.docH();},500);
-			//boxs.animate({'opacity' : '1'},1000,'swing');_this.isLoad = true;_this.docH();
-			// alert("显示完成");
-			
-		},
-		docH:function(){
-			var _this =this;
-			
-			if ((_this.$c.height()+_this.$c.position().top) -50 < $(window).height()){
-				_this.request(_this.time);
-			}
-		},
-		scroll:function () {
-			var _this = this;
-			
-			$window.scroll(function(){
-				if (_this.checkH()){
-					_this.request(_this.time);
-				}
-			});	
-		},
-		checkH:function(){
-			var _this = this;
-			var $aPin = $("."+_this.s);
-		    var lastPinH = $aPin.last().get(0).offsetTop + Math.floor($aPin.last().height());//创建【触发添加块框函数waterfall()】的高度：最后一个块框的距离网页顶部+自身高的一半(实现未滚到底就开始加载)
-		    var scrollTop = $( window ).scrollTop()//注意解决兼容性
-		    var documentH = $( window ).height();//页面高度
-		    return (lastPinH - 50 < scrollTop + documentH ) ? true : false;//到达指定高度后 返回true，触发waterfall()函数
-		},
-		init:function(){			
-			this.request(this.time);
-			this.scroll();
-			this.docH();
-		}
+			};
+
+			function getCols(){
+
+				return Math.floor($(window).width()/_childWidth);
+			};
 		
+			function addChild(data){
+
+				$.each(data, function(i, v){
+
+					var height = (_childWidth/v.width)*v.height;
+					var child = $("<div class='waterfall_box'><a class='img_box' href='"+v.url+"'><img height='"+height+"' src='http://www.bayibolan.com"+v.src+"'/><h4 class='waterfall_title' href='"+v.url+"'>"+v.text+"</h4></a></div>");
+					_parent.append(child);
+
+				});
+				layout();
+								
+			};
+			
+			function changeParentWidth(){
+
+				var cols = getCols();
+
+				_parent.width(cols * _childWidth).css({margin:'0 auto'});
+
+			};
+			
+			function layout(){
+				
+				var cols = getCols();
+				var top = [];
+				var child = _parent.children();
+				for(var i = 0, len = child.length; i < len; i++){
+					
+					if (i < cols){
+						child.eq(i).css({'float':'left','position':'static'});
+						top.push(child.eq(i).height());
+						
+					}else {
+						var topMin = Math.min.apply(null, top);
+						var topMinIndex = $.inArray(topMin, top);
+						child.eq(i).css({
+							position:"absolute",
+							top:topMin,
+							left:child.eq(topMinIndex).position().left
+
+						});
+						top[topMinIndex] += child.eq(i).height();
+						var max = Math.max.apply(null, top);
+						_parent.height(max);
+					}
+
+				};
+
+				_requestable = true;
+
+			};
+
+			function refersh(){
+
+				$(window).resize(function(){
+					changeParentWidth();
+					layout();
+				});
+
+			};
+
+			function loadMore(){
+
+				$(window).scroll(function(){
+					if(checkHeight()){
+						addChild(getData());
+						changeParentWidth();
+					}
+				});
+			};
+
+			function checkHeight(){
+
+				var top = _parent.position().top;
+				var scrollTop = $(window).scrollTop();
+				var _parentHeight = _parent.height();
+				var windowHeight = $(window).height();
+
+				return (scrollTop - top > _parentHeight - 50 - windowHeight) ? true : false; 
+			};
+
+			return function(){
+				this.init = function(){
+					addChild(getData());
+					changeParentWidth();
+					refersh();
+					loadMore();
+					return this;
+				}
+					
+			};
+
 	}
 
-	$.fn.waterfall = function(s){
-		return new Wtaerfall(this, s).init();
+
+	$.fn.waterfall = function(url, cw){
+		var water = Water(this, url, cw);
+		return new water().init();
 	}
 
-	
 })(jQuery, window, document);
